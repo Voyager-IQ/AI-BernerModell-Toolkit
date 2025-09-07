@@ -60,11 +60,18 @@ Ein visuell ansprechendes, interaktives Dashboard zur Trainingsplanung nach dem 
 ## 👤 Autor
 
 **Fabian Kaiser / VoyagerIQ**  
-🌐 [voyageriq.tech](https://voyageriq.tech)  
-🔗 [linktr.ee/fakaiser](https://linktr.ee/fakaiser)
+🌐 fkaiser@voyageriq.de
+🔗 [https://linkedin.com/](https://www.linkedin.com/in/fkaiser95/?lipi=urn%3Ali%3Apage%3Ad_flagship3_feed%3BiDDipmL7RY2fQTNhNXyBFA%3D%3D)
 
 ---
 
 ## 🪪 Lizenz
 
-MIT – frei verwendbar, anpassbar & teilbar.
+## 🪪 Lizenz
+
+[![License: MIT](https://img.shields.io/badge/Code-MIT-green.svg)](LICENSE)  
+[![License: CC BY 4.0](https://img.shields.io/badge/Content-CC%20BY%204.0-blue.svg)](https://creativecommons.org/licenses/by/4.0/)
+
+- **Code** steht unter [MIT License](LICENSE).  
+- **Texte & Inhalte** stehen unter [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). Attribution bitte an *Fabian Kaiser / VoyagerIQ*.  
+
