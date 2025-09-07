@@ -1,160 +1,70 @@
-# \# 🧠 Interaktives Berner Modell für IT-Trainer
+# 📘 Interaktives Berner Modell für IT-Trainer
 
-# 
+Ein visuell ansprechendes, interaktives Dashboard zur Trainingsplanung nach dem **Berner Modell** von Hans Furrer – speziell für IT-Trainer:innen in der Erwachsenenbildung.
 
-# Ein visuell ansprechendes, interaktives Dashboard zur Trainingsplanung nach dem \*\*Berner Modell\*\* von Hans Furrer – speziell für IT-Trainer:innen in der Erwachsenenbildung.  
+💡 Enthält eine Kombination aus Theorie, Visualisierung und einem KI-gestützten Planungsassistenten  
+(wahlweise Google Gemini oder lokaler LLM via LM Studio / Ollama)
 
-# Enthält eine Kombination aus Theorie, Visualisierung und einem KI-gestützten Planungsassistenten (wahlweise Google Gemini oder lokaler LLM via LM Studio / Ollama).
+---
 
-# 
+## 🚀 Funktionen
 
-# ---
+- **Modulare Visualisierung** der 6 zentralen Faktoren des Berner Modells (Analyse & Planung)
+- **Klickbare Content-Karten** mit direkt einblendbaren Leitfragen und Praxistipps
+- **Key-Konzept-Karten** zu *Morphemen*, *Driftzone*, *Kompetenzorientierung*
+- **KI-gestützter Trainingsplan-Assistent**
+  - *Kompetenzgenerator* (Performanz → Kompetenz → Ressourcen)
+  - *Methoden-Empfehlung* (passend zur Gruppengröße und Dauer)
+- **Radar-Diagramm** zur Darstellung der Interdependenz zwischen den Faktoren
+- **Checkliste** zur strukturierten Trainingsplanung
 
-# 
+---
 
-# \## 🚀 Funktionen
+## ⚙️ Setup & Nutzung
 
-# 
+### 🔌 KI-Anbieter wählen
+- **Google AI Studio (Gemini)**
+  - Trage deinen API-Key ein (Gemini 1.5 Pro oder 2.5 Flash)
+- **LM Studio / Ollama (lokaler LLM)**
+  - Trage deine lokale OpenAI-kompatible URL ein  
+    z. B. `http://localhost:1234/v1/chat/completions`
 
-# \- \*\*Modulare Visualisierung\*\* der 6 zentralen Faktoren des Berner Modells (Analyse \& Planung)
+---
 
-# \- \*\*Klickbare Content-Karten\*\* mit direkt einblendbaren Leitfragen und Praxistipps
+## 🛠️ Technologien
 
-# \- \*\*Schlüsselkonzepte erklärt\*\*: Morpheme, Driftzone, Kompetenzorientierung
+| Technologie | Beschreibung |
+|-------------|--------------|
+| 🧩 **HTML5 & TailwindCSS** | Für UI & Layout |
+| 📊 **Chart.js** | Radar-Diagramm für die Interdependenz |
+| 🧠 **Google Gemini / LM Studio** | Für die KI-basierten Trainingsvorschläge |
+| 🧠 **Ollama** | Alternativer lokaler KI-Anbieter |
 
-# \- \*\*KI-Planungsassistent (Gemini, LM Studio, Ollama)\*\* zur Generierung von:
+---
 
-# &nbsp; - Kompetenzbasierten Lerneinheiten (Performanz → Kompetenz → Ressourcen)
+## 🧪 Beispiele (Screenshots)
 
-# &nbsp; - Methodenvorschlägen basierend auf Thema, Dauer, Gruppengröße
+> *(Hier kannst du Screenshots oder GIFs ergänzen, die zeigen: Auswahl, KI-Ausgabe, Visualisierung etc.)*
 
-# \- \*\*Dynamisches Radar-Diagramm\*\* zur Gewichtung der Interdependenz-Faktoren
+---
 
-# \- \*\*Checkliste zur Trainingsplanung\*\* im Sinne des Modells
+## 📋 To-Do (Ideen für V2)
 
-# 
+- Export als PDF / Markdown
+- Merken & Laden von Trainingsprofilen
+- Mermaid- oder SVG-Diagramm-Integration
+- Backend-Verknüpfung (z. B. Moodle, SCORM, CSV-Export)
 
-# ---
+---
 
-# 
+## 👤 Autor
 
-# \## 🛠️ Technologie-Stack
+**Fabian Kaiser / VoyagerIQ**  
+🌐 [voyageriq.tech](https://voyageriq.tech)  
+🔗 [linktr.ee/fakaiser](https://linktr.ee/fakaiser)
 
-# 
+---
 
-# \- \*\*HTML5\*\* + \*\*TailwindCSS\*\*  
+## 🪪 Lizenz
 
-# \- \*\*Vanilla JavaScript\*\* (ohne Frameworks)  
-
-# \- \*\*Chart.js\*\* (für das Interdependenz-Diagramm)  
-
-# \- \*\*Google Fonts (Inter)\*\*  
-
-# \- \*\*Gemini API\*\* ODER \*\*lokaler OpenAI-kompatibler Endpunkt\*\*
-
-# 
-
-# ---
-
-# 
-
-# \## ⚙️ Konfiguration
-
-# 
-
-# \### 1. Wähle deinen KI-Anbieter:
-
-# 
-
-# \- \*\*Google AI Studio (Gemini)\*\*
-
-# &nbsp; - Trage deinen API-Key ein
-
-# &nbsp; - Nutzt: `gemini-2.5-flash-preview-05-20`
-
-# 
-
-# \- \*\*LM Studio / Ollama (lokal)\*\*
-
-# &nbsp; - Stelle sicher, dass dein lokaler LLM unter einer OpenAI-kompatiblen URL läuft  
-
-# &nbsp; - Trage z.B. ein: `http://localhost:1234/v1/chat/completions`
-
-# 
-
-# ---
-
-# 
-
-# \## 📸 Screenshots
-
-# 
-
-# \*(Optional – füge Screenshots hinzu, z.B. vom interaktiven Dashboard, vom Kompetenzgenerator etc.)\*
-
-# 
-
-# ---
-
-# 
-
-# \## ✅ To-Do / Ideen für Erweiterung
-
-# 
-
-# \- Exportfunktion für generierte Kompetenzpläne
-
-# \- Integration von MermaidJS oder SVG für Ablaufdiagramme
-
-# \- Speicherfunktion für Trainingsprofile
-
-# \- Backend-Anbindung (z.B. zur Verwaltung von Seminaren)
-
-# 
-
-# ---
-
-# 
-
-# \## 🧑‍🏫 Zielgruppe
-
-# 
-
-# \- IT-Trainer:innen in der Erwachsenenbildung
-
-# \- Bildungsanbieter \& Weiterbildungsakademien
-
-# \- Trainer:innen in Behörden, Bundeswehr, VHS etc.
-
-# \- Didaktisch Interessierte mit Fokus auf Kompetenzentwicklung
-
-# 
-
-# ---
-
-# 
-
-# \## 🪪 Lizenz
-
-# 
-
-# MIT License – feel free to fork, adapt and share!
-
-# 
-
-# ---
-
-# 
-
-# \## ✨ Autor
-
-# 
-
-# \*\*Fabian Kaiser\*\*  
-
-# \[linktr.ee/fakaiser](https://linktr.ee/fakaiser) | \[voyageriq.tech](https://voyageriq.tech)
-
-# 
-
-
-
+MIT – frei verwendbar, anpassbar & teilbar.
