@@ -1,0 +1,26 @@
+# Node / Paketmanager
+node_modules/
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Betriebssystem
+.DS_Store
+Thumbs.db
+
+# Umgebungsdateien
+.env
+.env.*
+*.local
+
+# Build/Temp
+dist/
+build/
+tmp/
+.cache/
