@@ -83,8 +83,9 @@ Siehe [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## 👤 Autor
 **Fabian Kaiser / VoyagerIQ**  
-🌐 fkaiser@voyageriq.de
-🔗 [https://linkedin.com/](https://www.linkedin.com/in/fkaiser95)
+🌐 [voyageriq.tech](https://voyageriq.tech)  
+📧 fkaiser@voyageriq.de  
+🔗 [LinkedIn](https://www.linkedin.com/in/fkaiser95)
 
 ---
 
@@ -92,6 +93,12 @@ Siehe [CONTRIBUTING.md](CONTRIBUTING.md).
 
 [![License: MIT](https://img.shields.io/badge/Code-MIT-green.svg)](LICENSE)  
 [![License: CC BY 4.0](https://img.shields.io/badge/Content-CC%20BY%204.0-blue.svg)](https://creativecommons.org/licenses/by/4.0/)
+
+- **Code** steht unter [MIT License](LICENSE).  
+- **Texte & Inhalte** stehen unter [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). Attribution an *Fabian Kaiser / VoyagerIQ*.  
+
+📌 Für Security-Meldungen: [SECURITY.md](SECURITY.md) (📧 security@voyageriq.de)
+
 
 - **Code** steht unter [MIT License](LICENSE).  
 - **Texte & Inhalte** stehen unter [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). Attribution an *Fabian Kaiser / VoyagerIQ*.  
