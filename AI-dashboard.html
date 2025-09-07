@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interaktives Berner Modell für IT-Trainer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Calm Harmony (Warm neutrals with muted teal/orange accents) -->
+    <!-- Application Structure Plan: A task-oriented dashboard centered on the Berner Modell. The structure includes an AI provider selection (Google, LM Studio, Ollama) to make the tool more flexible. It retains the competence-based approach, replacing 'Lernziele' with 'Kompetenzen'. A section introduces key concepts from the source book (Morpheme, Driftzone). The AI assistant generates competence breakdowns (Performanz, Kompetenz, Ressourcen), directly applying the book's methodology with the user's chosen AI backend. This structure guides the user from configuration and theory to practical AI-assisted planning. -->
+    <!-- Visualization & Content Choices: 1. Main Model Structure: Report Info -> The 6 factors of the Berner Modell. Goal -> Organize/Navigate. Viz -> Interactive HTML/CSS cards. Interaction -> Click to reveal details. Justification -> Visually represents the model's structure. Method -> HTML/Tailwind. 2. Key Concepts Section: Report Info -> Concepts like Morpheme, Driftzone. Goal -> Explain/Inform. Viz -> Interactive cards. Interaction -> Click to show definitions. Justification -> Deepens understanding. Method -> HTML/Tailwind. 3. AI Assistant: Report Info -> Competence analysis examples. Goal -> Apply principles. Viz -> Input forms and structured text output. Interaction -> User selects AI provider, inputs parameters for a full competence breakdown. Justification -> Turns theory into a powerful, practical planning tool. Method -> Gemini API or local LLM via fetch. 4. Interdependence Chart & Checklist: Report Info -> Interdependence principle and summary. Goal -> Explain/Summarize. Viz -> Radar Chart & HTML Table. Justification -> Visual summary and reference. Library/Method -> Chart.js, HTML/Tailwind. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #fdfcfb;
+            color: #333;
+        }
+        .active-card {
+            border-color: #0d9488;
+            box-shadow: 0 4px 14px 0 rgba(13, 148, 136, 0.2);
+            transform: translateY(-2px);
+        }
+        .content-fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+         @media (min-width: 768px) {
+            .chart-container {
+                height: 400px;
+            }
+        }
+        .loader {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #0d9488;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .gemini-result ul {
+            list-style-position: inside;
+            list-style-type: disc;
+            padding-left: 1rem;
+        }
+        .gemini-result li {
+            margin-bottom: 0.5rem;
+        }
+        .gemini-result ul ul {
+            padding-left: 1.5rem;
+            list-style-type: circle;
+        }
+        .gemini-result strong {
+            color: #115e59;
+        }
+        .concept-card {
+            background-color: #f8fafc;
+        }
+        input[type="radio"]:checked + label {
+            background-color: #0d9488;
+            color: white;
+            border-color: #0d9488;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <header class="text-center mb-12">
+            <h1 class="text-4xl md:text-5xl font-bold text-teal-800 tracking-tight">Das Interaktive Berner Modell</h1>
+            <p class="mt-4 text-lg text-gray-600 max-w-3xl mx-auto">Ein praktisches Werkzeug zur Planung Ihrer IT-Trainings in der Erwachsenenbildung. Klicken Sie auf die einzelnen Bausteine, um Details zu erkunden.</p>
+        </header>
+
+        <main>
+            <section id="interactive-model" class="mb-16">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-6xl mx-auto">
+                    
+                    <div class="bg-amber-50 p-6 rounded-xl shadow-sm">
+                        <h2 class="text-2xl font-bold text-amber-800 mb-4 text-center">Bedingungsfeld (Analyse)</h2>
+                        <p class="text-center text-amber-700 mb-6">Was ist die Ausgangssituation? Hier analysieren Sie die Realität, bevor die eigentliche Planung beginnt.</p>
+                        <div class="space-y-4">
+                            <div id="card-teilnehmende" class="model-card bg-white p-6 rounded-lg border-2 border-transparent cursor-pointer transition-all duration-300 hover:shadow-lg hover:border-teal-500" data-content="teilnehmende">
+                                <h3 class="text-xl font-semibold text-gray-800">A) Die Teilnehmenden & ihr Habitus</h3>
+                                <p class="text-gray-500 mt-1">Anthropogen-psychologische Voraussetzungen</p>
+                            </div>
+                            <div id="card-rahmen" class="model-card bg-white p-6 rounded-lg border-2 border-transparent cursor-pointer transition-all duration-300 hover:shadow-lg hover:border-teal-500" data-content="rahmen">
+                                <h3 class="text-xl font-semibold text-gray-800">B) Der institutionelle Rahmen</h3>
+                                <p class="text-gray-500 mt-1">Soziokulturelle Voraussetzungen</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-teal-50 p-6 rounded-xl shadow-sm">
+                        <h2 class="text-2xl font-bold text-teal-800 mb-4 text-center">Entscheidungsfeld (Planung)</h2>
+                        <p class="text-center text-teal-700 mb-6">Was machen Sie konkret im Training? Hier treffen Sie auf Basis Ihrer Analyse die didaktischen Entscheidungen.</p>
+                        <div class="space-y-4">
+                            <div id="card-kompetenzen" class="model-card bg-white p-6 rounded-lg border-2 border-transparent cursor-pointer transition-all duration-300 hover:shadow-lg hover:border-teal-500" data-content="kompetenzen">
+                                <h3 class="text-xl font-semibold text-gray-800">1. Anzustrebende Kompetenzen</h3>
+                            </div>
+                            <div id="card-inhalte" class="model-card bg-white p-6 rounded-lg border-2 border-transparent cursor-pointer transition-all duration-300 hover:shadow-lg hover:border-teal-500" data-content="inhalte">
+                                <h3 class="text-xl font-semibold text-gray-800">2. Inhalte & Morpheme</h3>
+                            </div>
+                            <div id="card-methoden" class="model-card bg-white p-6 rounded-lg border-2 border-transparent cursor-pointer transition-all duration-300 hover:shadow-lg hover:border-teal-500" data-content="methoden">
+                                <h3 class="text-xl font-semibold text-gray-800">3. Methoden & Sozialformen</h3>
+                            </div>
+                            <div id="card-medien" class="model-card bg-white p-6 rounded-lg border-2 border-transparent cursor-pointer transition-all duration-300 hover:shadow-lg hover:border-teal-500" data-content="medien">
+                                <h3 class="text-xl font-semibold text-gray-800">4. Medien (Werkzeuge)</h3>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+            
+            <section id="content-display" class="bg-white p-8 rounded-xl shadow-lg max-w-6xl mx-auto min-h-[200px] mb-16">
+                <div id="content-target" class="prose max-w-none">
+                    <p class="text-gray-500 text-center text-lg">Wählen Sie einen Baustein aus, um hier die detaillierten Leitfragen und Praxis-Tipps zu sehen.</p>
+                </div>
+            </section>
+
+            <section id="key-concepts" class="py-16 bg-stone-50 rounded-xl max-w-6xl mx-auto">
+                <div class="text-center mb-12 px-6">
+                    <h2 class="text-3xl font-bold text-teal-800">Schlüsselkonzepte des Berner Modells</h2>
+                    <p class="mt-2 text-lg text-gray-600 max-w-3xl mx-auto">Das Berner Modell erweitert die klassische Didaktik um zentrale Ideen. Klicken Sie auf die Karten, um mehr zu erfahren.</p>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 px-6">
+                    <div class="concept-card model-card p-6 rounded-lg border-2 border-transparent cursor-pointer transition-all duration-300 hover:shadow-lg hover:border-teal-500" data-content="kompetenzorientierung">
+                        <h3 class="text-xl font-semibold text-gray-800">Kompetenzorientierung</h3>
+                        <p class="text-gray-500 mt-1">Von der Performanz zur Kompetenz.</p>
+                    </div>
+                     <div class="concept-card model-card p-6 rounded-lg border-2 border-transparent cursor-pointer transition-all duration-300 hover:shadow-lg hover:border-teal-500" data-content="morpheme">
+                        <h3 class="text-xl font-semibold text-gray-800">Morpheme</h3>
+                        <p class="text-gray-500 mt-1">Die kleinsten sinntragenden Elemente.</p>
+                    </div>
+                     <div class="concept-card model-card p-6 rounded-lg border-2 border-transparent cursor-pointer transition-all duration-300 hover:shadow-lg hover:border-teal-500" data-content="driftzone">
+                        <h3 class="text-xl font-semibold text-gray-800">Driftzone</h3>
+                        <p class="text-gray-500 mt-1">Der Raum zwischen Lehren und Lernen.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="gemini-assistant" class="mt-16 py-16 bg-white rounded-xl shadow-lg max-w-6xl mx-auto">
+                <div class="text-center mb-12 px-6">
+                    <h2 class="text-3xl font-bold text-teal-800">KI-Planungsassistent ✨</h2>
+                    <p class="mt-2 text-lg text-gray-600 max-w-3xl mx-auto">Nutzen Sie eine KI, um Ihre Trainingsplanung nach dem Berner Modell zu beschleunigen.</p>
+                </div>
+                
+                <div id="ai-config-section" class="mb-12 px-6">
+                    <div class="max-w-2xl mx-auto bg-stone-50 p-6 rounded-lg shadow-sm">
+                        <h3 class="text-xl font-semibold text-gray-800 mb-4 text-center">KI-Konfiguration</h3>
+                        <div class="flex justify-center space-x-2 sm:space-x-4 mb-4" role="radiogroup">
+                            <input type="radio" id="provider-google" name="ai-provider" value="google" class="sr-only" checked>
+                            <label for="provider-google" class="cursor-pointer text-center px-3 py-2 text-sm sm:text-base sm:px-6 sm:py-2 border rounded-md transition-colors duration-200">Google AI</label>
+                            
+                            <input type="radio" id="provider-lmstudio" name="ai-provider" value="lmstudio" class="sr-only">
+                            <label for="provider-lmstudio" class="cursor-pointer text-center px-3 py-2 text-sm sm:text-base sm:px-6 sm:py-2 border rounded-md transition-colors duration-200">LM Studio</label>
+                            
+                            <input type="radio" id="provider-ollama" name="ai-provider" value="ollama" class="sr-only">
+                            <label for="provider-ollama" class="cursor-pointer text-center px-3 py-2 text-sm sm:text-base sm:px-6 sm:py-2 border rounded-md transition-colors duration-200">Ollama</label>
+                        </div>
+                        
+                        <div id="google-config">
+                             <label for="api-key-input" class="block text-sm font-medium text-gray-700">Google AI Studio API-Schlüssel</label>
+                            <input type="password" id="api-key-input" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500" placeholder="Ihr API-Schlüssel">
+                        </div>
+                        <div id="local-config" class="hidden">
+                             <label for="local-url-input" class="block text-sm font-medium text-gray-700">Lokale Server-URL (OpenAI-kompatibel)</label>
+                            <input type="text" id="local-url-input" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500" placeholder="z.B. http://localhost:1234/v1/chat/completions">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 px-6">
+                    <div class="bg-stone-50 p-6 rounded-lg">
+                        <h3 class="text-xl font-semibold text-gray-800 mb-4">1. Kompetenz-Generator</h3>
+                        <div class="space-y-4">
+                            <div>
+                                <label for="topic-input" class="block text-sm font-medium text-gray-700">Trainingsthema</label>
+                                <input type="text" id="topic-input" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500" placeholder="z.B. Excel Pivot-Tabellen">
+                            </div>
+                            <div>
+                                <label for="skill-level-input" class="block text-sm font-medium text-gray-700">Kontext & Zielgruppe</label>
+                                <input type="text" id="skill-level-input" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500" placeholder="z.B. Marketing-Mitarbeitende, Anfänger">
+                            </div>
+                            <button id="generate-kompetenz-btn" class="w-full bg-teal-600 text-white font-semibold py-2 px-4 rounded-md hover:bg-teal-700 transition-colors flex items-center justify-center">
+                                ✨ Kompetenzen & Ressourcen definieren
+                            </button>
+                        </div>
+                        <div id="kompetenz-loading" class="hidden mt-4">
+                            <div class="loader"></div>
+                        </div>
+                        <div id="kompetenz-result" class="mt-4 p-4 bg-white rounded-md border border-gray-200 min-h-[100px] gemini-result"></div>
+                    </div>
+                    
+                    <div class="bg-stone-50 p-6 rounded-lg">
+                        <h3 class="text-xl font-semibold text-gray-800 mb-4">2. Methoden-Empfehler</h3>
+                        <div class="space-y-4">
+                             <div>
+                                <label for="method-topic-input" class="block text-sm font-medium text-gray-700">Trainingsthema</label>
+                                <input type="text" id="method-topic-input" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500" placeholder="z.B. Einführung in Python">
+                            </div>
+                            <div>
+                                <label for="method-duration-input" class="block text-sm font-medium text-gray-700">Dauer & Gruppengrösse</label>
+                                 <input type="text" id="method-duration-input" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500" placeholder="z.B. 4 Stunden, 12 Personen">
+                            </div>
+                            <button id="generate-methoden-btn" class="w-full bg-teal-600 text-white font-semibold py-2 px-4 rounded-md hover:bg-teal-700 transition-colors flex items-center justify-center">
+                                ✨ Passende Methoden empfehlen
+                            </button>
+                        </div>
+                        <div id="methoden-loading" class="hidden mt-4">
+                            <div class="loader"></div>
+                        </div>
+                        <div id="methoden-result" class="mt-4 p-4 bg-white rounded-md border border-gray-200 min-h-[100px] gemini-result"></div>
+                    </div>
+                </div>
+            </section>
+            
+            <section id="interdependence" class="text-center py-16 bg-stone-50 rounded-xl mt-16">
+                 <h2 class="text-3xl font-bold text-teal-800 mb-4">Das Prinzip der Interdependenz</h2>
+                <p class="mt-2 text-lg text-gray-600 max-w-3xl mx-auto mb-8">Alle sechs Faktoren beeinflussen sich gegenseitig. Eine Änderung an einem Punkt hat Auswirkungen auf alle anderen. Dieses Diagramm visualisiert, wie unterschiedliche Trainings-Schwerpunkte die Gewichtung der Faktoren verändern.</p>
+                <div class="chart-container h-96 md:h-[400px]">
+                    <canvas id="interdependenceChart"></canvas>
+                </div>
+                <div class="mt-8 flex justify-center flex-wrap gap-3">
+                    <button class="profile-btn bg-teal-600 text-white px-4 py-2 rounded-md hover:bg-teal-700 transition-colors" data-profile="balanced">Ausgewogen</button>
+                    <button class="profile-btn bg-stone-500 text-white px-4 py-2 rounded-md hover:bg-stone-600 transition-colors" data-profile="participant">Teilnehmer-Fokus</button>
+                    <button class="profile-btn bg-stone-500 text-white px-4 py-2 rounded-md hover:bg-stone-600 transition-colors" data-profile="content">Inhalts-Fokus</button>
+                    <button class="profile-btn bg-stone-500 text-white px-4 py-2 rounded-md hover:bg-stone-600 transition-colors" data-profile="efficiency">Effizienz-Fokus</button>
+                </div>
+            </section>
+
+             <section id="checklist" class="mt-16">
+                <h2 class="text-3xl font-bold text-teal-800 mb-6 text-center">Checkliste zur Trainingsplanung</h2>
+                <div class="max-w-6xl mx-auto overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead class="bg-teal-50">
+                            <tr>
+                                <th class="p-4 text-lg font-semibold text-teal-800 border-b-2 border-teal-200">Planungsphase</th>
+                                <th class="p-4 text-lg font-semibold text-teal-800 border-b-2 border-teal-200">Schlüsselfrage</th>
+                                <th class="p-4 text-lg font-semibold text-teal-800 border-b-2 border-teal-200">Woran ich konkret denken muss...</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="bg-amber-50/50">
+                                <td class="p-4 font-bold text-amber-800 align-top border-b border-stone-200" colspan="3">Bedingungsfeld: Analyse (WER & WO?)</td>
+                            </tr>
+                            <tr>
+                                <td class="p-4 font-semibold text-gray-700 align-top border-b border-stone-200">Die Teilnehmenden</td>
+                                <td class="p-4 text-gray-600 align-top border-b border-stone-200">Wer sind meine Lerner?</td>
+                                <td class="p-4 text-gray-600 align-top border-b border-stone-200">Vorkenntnisse, Habitus, Motivation, Lernstil</td>
+                            </tr>
+                            <tr>
+                                <td class="p-4 font-semibold text-gray-700 align-top border-b border-stone-200">Der Rahmen</td>
+                                <td class="p-4 text-gray-600 align-top border-b border-stone-200">Was sind die Spielregeln?</td>
+                                <td class="p-4 text-gray-600 align-top border-b border-stone-200">Ziele des Auftraggebers, Zeit, Raum, Technik, Globe</td>
+                            </tr>
+                             <tr class="bg-teal-50/50">
+                                <td class="p-4 font-bold text-teal-800 align-top border-b border-stone-200" colspan="3">Entscheidungsfeld: Planung (WAS, WIE & WOMIT?)</td>
+                            </tr>
+                            <tr>
+                                <td class="p-4 font-semibold text-gray-700 align-top border-b border-stone-200">Kompetenzen</td>
+                                <td class="p-4 text-gray-600 align-top border-b border-stone-200">Was sollen sie danach KÖNNEN?</td>
+                                <td class="p-4 text-gray-600 align-top border-b border-stone-200">Performanz beschreiben, Kompetenzen & Ressourcen ableiten</td>
+                            </tr>
+                             <tr>
+                                <td class="p-4 font-semibold text-gray-700 align-top border-b border-stone-200">Inhalte & Morpheme</td>
+                                <td class="p-4 text-gray-600 align-top border-b border-stone-200">Was muss ich dafür zeigen?</td>
+                                <td class="p-4 text-gray-600 align-top border-b border-stone-200">Kernthemen (Morpheme) finden, didaktisch reduzieren</td>
+                            </tr>
+                             <tr>
+                                <td class="p-4 font-semibold text-gray-700 align-top border-b border-stone-200">Methoden</td>
+                                <td class="p-4 text-gray-600 align-top border-b border-stone-200">Wie gestalte ich die Driftzone?</td>
+                                <td class="p-4 text-gray-600 align-top border-b border-stone-200">Mix aus Demo, Übung, Austausch; Einzel-, Partner-, Gruppenarbeit</td>
+                            </tr>
+                             <tr>
+                                <td class="p-4 font-semibold text-gray-700 align-top border-b border-stone-200">Medien</td>
+                                <td class="p-4 text-gray-600 align-top border-b border-stone-200">Womit unterstütze ich sie?</td>
+                                <td class="p-4 text-gray-600 align-top border-b border-stone-200">Generative Bilder, Software, Handout, Übungsdateien</td>
+                            </tr>
+                             <tr class="bg-stone-200">
+                                <td class="p-4 font-bold text-stone-800 align-top border-b border-stone-200" colspan="3">Abschluss (HAT ES GEKLAPPT?)</td>
+                            </tr>
+                            <tr>
+                                <td class="p-4 font-semibold text-gray-700 align-top border-b-0">Erfolgskontrolle</td>
+                                <td class="p-4 text-gray-600 align-top border-b-0">Wurde die Performanz gezeigt?</td>
+                                <td class="p-4 text-gray-600 align-top border-b-0">Beobachtung, Abschlussübung, Feedback einholen</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+
+    const contentData = {
+        teilnehmende: {
+            title: 'A) Die Teilnehmenden & ihr Habitus',
+            content: `
+                <p class="text-lg mb-4">Wer sitzt vor dir und was bringt diese Person mit? Der von Bourdieu geprägte Begriff <strong>Habitus</strong> beschreibt die verinnerlichten Muster (Denk-, Wahrnehmungs- und Handlungsschemata), die das Lernverhalten prägen.</p>
+                <ul class="list-disc pl-5 space-y-3">
+                    <li><strong>Vorkenntnisse & Lernstil:</strong>
+                        <ul class="list-disc pl-5 mt-1">
+                            <li>Wie hoch ist die allgemeine IT-Affinität?</li>
+                            <li>Welche Erfahrungen und (Vor-)Urteile zum Thema bringen sie mit?</li>
+                            <li>Welcher Lerntyp ist vorherrschend (visuell, auditiv, kinästhetisch)?</li>
+                        </ul>
+                    </li>
+                    <li><strong>Motivation & Einstellung:</strong>
+                         <ul class="list-disc pl-5 mt-1">
+                            <li>Nehmen sie freiwillig teil oder ist die Teilnahme verpflichtend?</li>
+                            <li>Welche Erwartungen oder auch Ängste verbinden sie mit dem Training?</li>
+                        </ul>
+                    </li>
+                     <li><strong>Soziokultureller Hintergrund (Habitus):</strong>
+                         <ul class="list-disc pl-5 mt-1">
+                            <li>Welche Job-Rollen und beruflichen Hintergründe sind vertreten?</li>
+                             <li>Wie ist die Einstellung zu Bildung und Lernen geprägt (z.B. leistungsorientiert, kreativ-explorativ)?</li>
+                        </ul>
+                    </li>
+                </ul>`
+        },
+        rahmen: {
+            title: 'B) Der institutionelle Rahmen (Soziokulturelle Voraussetzungen)',
+            content: `
+                <p class="text-lg mb-4">In welchem Umfeld findet das Training statt? Der von der TZI übernommene Begriff <strong>Globe</strong> bezeichnet das breite gesellschaftliche Umfeld, das Einfluss auf das Training hat (z.B. Digitalisierungstrends, wirtschaftliche Lage).</p>
+                <ul class="list-disc pl-5 space-y-3">
+                    <li><strong>Organisatorische Ziele:</strong> Was ist das Ziel des Unternehmens/Auftraggebers?</li>
+                    <li><strong>Technische Rahmenbedingungen:</strong> Online/präsent? Welche Hard- und Software?</li>
+                    <li><strong>Zeitliche und räumliche Gegebenheiten:</strong> Dauer, Pausen, Raumausstattung.</li>
+                    <li><strong>Gesellschaftlicher "Globe":</strong> Welche epochaltypischen Schlüsselprobleme (nach Klafki) berührt das Thema (z.B. Umwelt, Ungleichheit, Medien)?</li>
+                </ul>`
+        },
+        kompetenzen: {
+            title: '1. Anzustrebende Kompetenzen',
+            content: `
+                <p class="text-lg mb-4"><strong>Leitfrage: Welche Handlung (Performanz) sollen die Teilnehmenden am Ende zeigen können?</strong></p>
+                <p>Das Berner Modell ist kompetenzorientiert. Statt abstrakter Lernziele wird eine konkrete, beobachtbare Handlung (<strong>Performanz</strong>) beschrieben. Daraus leiten sich die zu entwickelnde <strong>Kompetenz</strong> und die dafür notwendigen <strong>Ressourcen</strong> ab.</p>
+                <ul class="list-disc pl-5 space-y-2 mt-4 bg-stone-50 p-4 rounded-md">
+                    <li><strong>Performanz:</strong> Eine typische Situation aus dem Arbeitsalltag wird beschrieben. (Was tut die Person?)</li>
+                    <li><strong>Kompetenz:</strong> Die Fähigkeit, in dieser Situation die nötigen Ressourcen zu mobilisieren und erfolgreich zu handeln. (Was muss sie können?)</li>
+                    <li><strong>Ressourcen:</strong> Die Bausteine der Kompetenz.
+                        <ul class="list-disc pl-5 mt-1">
+                            <li><strong>Wissen:</strong> Theoretische Kenntnisse, Fakten.</li>
+                            <li><strong>Fertigkeiten:</strong> Praktische, geübte Verfahren (z.B. Software bedienen).</li>
+                            <li><strong>Fähigkeiten:</strong> Verinnerlichte Haltungen und Werte (z.B. Empathie, Genauigkeit).</li>
+                        </ul>
+                    </li>
+                </ul>`
+        },
+        inhalte: {
+            title: '2. Inhalte & Morpheme',
+            content: `
+                <p class="text-lg mb-4"><strong>Leitfrage: Welches sind die kleinsten, sinntragenden Kernelemente (Morpheme) des Themas?</strong></p>
+                <p>Die <strong>Morphemanalyse</strong> ist der Kern der didaktischen Reduktion. Anstatt das Thema in seiner Gänze zu präsentieren, identifizieren Sie die zentralen, generativen Bausteine (<strong>Morpheme</strong>), aus denen sich das ganze Thema erschließen lässt.</p>
+                <ul class="list-disc pl-5 space-y-2">
+                    <li><strong>Brainstorming:</strong> Alle Assoziationen und Teilbereiche des Themas sammeln.</li>
+                    <li><strong>Clustern:</strong> Die gesammelten Punkte zu logischen Gruppen zusammenfassen.</li>
+                    <li><strong>Morpheme identifizieren:</strong> Die zentralen, unverzichtbaren Kernkonzepte oder -prozesse auswählen, die das Thema "im Keim" enthalten.</li>
+                </ul>`
+        },
+        methoden: {
+            title: '3. Methoden & Sozialformen',
+            content: `
+                <p class="text-lg mb-4"><strong>Leitfrage: <em>Wie</em> gestalte ich eine "Driftzone", in der die Teilnehmenden aktiv lernen können?</strong></p>
+                <p>Die Methoden sollen einen Lernraum (<strong>Driftzone</strong>) schaffen, in dem die Teilnehmenden zwischen den von Ihnen angebotenen Morphemen navigieren und eigene Lernwege (<strong>Chreoden</strong>) finden können.</p>
+                 <ul class="list-disc pl-5 space-y-3">
+                    <li><strong>Einstieg:</strong> Oft durch "Generative Bilder" (nach Freire), die zum Nachdenken anregen und das Thema emotional verankern.</li>
+                    <li><strong>Methoden-Mix:</strong> Ein Wechsel aus Input (Live-Demo), praktischer Anwendung (Übung, Fallbeispiel) und Austausch (Diskussion, Partnerarbeit) ist entscheidend.</li>
+                    <li><strong>Sozialformen:</strong> Der bewusste Einsatz von Plenum, Einzel-, Partner- und Gruppenarbeit steuert die Interaktion und den Lernprozess.</li>
+                </ul>
+                `
+        },
+        medien: {
+            title: '4. Medien (Die Werkzeuge)',
+            content: `
+                <p class="text-lg mb-4"><strong>Leitfrage: <em>Womit</em> unterstütze ich den Lernprozess am besten?</strong></p>
+                <ul class="list-disc pl-5 space-y-2">
+                    <li><strong>Generative Medien:</strong> Bilder, kurze Videos, Fallbeispiele oder physische Gegenstände, die als "Morphem" dienen und Diskussionen anstoßen.</li>
+                    <li><strong>Präsentationsmedien:</strong> Whiteboard, Flipchart, sparsam eingesetzte Slides.</li>
+                    <li><strong>Arbeitsumgebung:</strong> Die Software selbst, eine Testumgebung.</li>
+                    <li><strong>Begleitmaterial:</strong> Handout, Spickzettel (Cheat Sheet), Übungsdateien.</li>
+                </ul>`
+        },
+        kompetenzorientierung: {
+            title: 'Schlüsselkonzept: Kompetenzorientierung',
+            content: `
+                <p>Im Gegensatz zur reinen Zielorientierung steht hier die Handlungsfähigkeit im Zentrum. Geplant wird rückwärts von einer konkreten, berufstypischen Situation (<strong>Performanz</strong>). Es wird analysiert, welche <strong>Kompetenz</strong> eine Person braucht, um diese Situation zu meistern. Diese Kompetenz wird wiederum in ihre Bestandteile zerlegt: die lernbaren <strong>Ressourcen</strong> (Wissen, Fertigkeiten, Fähigkeiten).</p>
+                <p class="mt-2"><strong>Der Vorteil:</strong> Das Lernen ist direkt an der Praxis ausgerichtet und für die Teilnehmenden unmittelbar relevant.</p>`
+        },
+        morpheme: {
+            title: 'Schlüsselkonzept: Morpheme',
+            content: `
+                <p>Aus der Linguistik entlehnt, bezeichnet ein <strong>Morphem</strong> die kleinste sinntragende Einheit eines Themas. Statt einen Stoff linear von A bis Z zu behandeln, identifiziert der Trainer die 2-4 zentralen Morpheme, die das Thema im Kern ausmachen.</p>
+                <p class="mt-2"><strong>Der Vorteil:</strong> Dies ermöglicht eine starke didaktische Reduktion. Die Teilnehmenden können von diesen Kernpunkten aus das Thema selbstständig und auf ihre Weise erschließen, anstatt mit einer Fülle von Details überladen zu werden.</p>`
+        },
+        driftzone: {
+            title: 'Schlüsselkonzept: Driftzone',
+            content: `
+                <p>Die <strong>Driftzone</strong> ist die didaktische Landschaft, die der Trainer gestaltet. Sie ist der Lernraum, der durch die ausgewählten Morpheme aufgespannt wird. Innerhalb dieser Zone können die Teilnehmenden "driften", d.h. eigene Wege gehen, Verbindungen herstellen und Schwerpunkte setzen. Ihr individueller Weg wird als <strong>Chreode</strong> bezeichnet, geprägt durch ihren persönlichen <strong>Habitus</strong> (Lerngewohnheiten).</p>
+                <p class="mt-2"><strong>Der Vorteil:</strong> Dieser Ansatz fördert selbstgesteuertes und individualisiertes Lernen. Der Trainer ist nicht mehr Wissensvermittler, sondern Gestalter einer anregenden Lernumgebung.</p>`
+        }
+    };
+
+    const modelCards = document.querySelectorAll('.model-card');
+    const contentTarget = document.getElementById('content-target');
+
+    modelCards.forEach(card => {
+        card.addEventListener('click', () => {
+            document.querySelectorAll('.concept-card').forEach(c => c.classList.remove('active-card'));
+            document.querySelectorAll('#interactive-model .model-card').forEach(c => c.classList.remove('active-card'));
+
+            card.classList.add('active-card');
+            
+            const contentKey = card.dataset.content;
+            const data = contentData[contentKey];
+            
+            contentTarget.innerHTML = `<div class="content-fade-in"><h2 class="text-2xl font-bold text-gray-800 mb-4">${data.title}</h2>${data.content}</div>`;
+            contentTarget.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        });
+    });
+
+    const ctx = document.getElementById('interdependenceChart').getContext('2d');
+    
+    const chartData = {
+        labels: ['Teilnehmende', 'Rahmen', 'Kompetenzen', 'Inhalte', 'Methoden', 'Medien'],
+        datasets: [{
+            label: 'Gewichtung im Trainingsplan',
+            data: [4, 4, 4, 4, 4, 4],
+            backgroundColor: 'rgba(13, 148, 136, 0.2)',
+            borderColor: 'rgba(13, 148, 136, 1)',
+            pointBackgroundColor: 'rgba(13, 148, 136, 1)',
+            pointBorderColor: '#fff',
+            pointHoverBackgroundColor: '#fff',
+            pointHoverBorderColor: 'rgba(13, 148, 136, 1)',
+            borderWidth: 2
+        }]
+    };
+    
+    const chartOptions = {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+            r: {
+                angleLines: {
+                    display: true,
+                    color: 'rgba(0, 0, 0, 0.1)'
+                },
+                suggestedMin: 0,
+                suggestedMax: 5,
+                 pointLabels: {
+                    font: {
+                        size: 12
+                    }
+                },
+                ticks: {
+                    display: false,
+                    stepSize: 1
+                }
+            }
+        },
+        plugins: {
+            legend: {
+                display: false
+            }
+        }
+    };
+    
+    const interdependenceChart = new Chart(ctx, {
+        type: 'radar',
+        data: chartData,
+        options: chartOptions,
+    });
+    
+    const profiles = {
+        balanced: [4, 4, 4, 4, 4, 4],
+        participant: [5, 3, 4, 3, 5, 4],
+        content: [3, 4, 5, 5, 3, 4],
+        efficiency: [3, 5, 5, 4, 3, 2]
+    };
+
+    const profileButtons = document.querySelectorAll('.profile-btn');
+    profileButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            profileButtons.forEach(btn => {
+                btn.classList.remove('bg-teal-600', 'hover:bg-teal-700');
+                btn.classList.add('bg-stone-500', 'hover:bg-stone-600');
+            });
+            button.classList.add('bg-teal-600', 'hover:bg-teal-700');
+            button.classList.remove('bg-stone-500', 'hover:bg-stone-600');
+
+            const profileName = button.dataset.profile;
+            interdependenceChart.data.datasets[0].data = profiles[profileName];
+            interdependenceChart.update();
+        });
+    });
+
+    async function callAI(prompt, resultElement, loadingElement) {
+        loadingElement.classList.remove('hidden');
+        resultElement.innerHTML = '';
+
+        const provider = document.querySelector('input[name="ai-provider"]:checked').value;
+        let apiUrl;
+        let payload;
+        let headers = { 'Content-Type': 'application/json' };
+
+        try {
+            if (provider === 'google') {
+                const apiKey = document.getElementById('api-key-input').value;
+                if (!apiKey) {
+                    throw new Error('Bitte geben Sie einen Google AI Studio API-Schlüssel ein.');
+                }
+                apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
+                payload = { contents: [{ parts: [{ text: prompt }] }] };
+            } else {
+                apiUrl = document.getElementById('local-url-input').value;
+                if (!apiUrl) {
+                    throw new Error('Bitte geben Sie die Server-URL für den lokalen Anbieter ein.');
+                }
+                const systemPromptMatch = prompt.match(/Act as (.*?)\./);
+                const systemContent = systemPromptMatch ? `Act as ${systemPromptMatch[1]}.` : "You are a helpful assistant.";
+                const userContent = prompt.replace(systemContent, '').trim();
+                payload = {
+                    model: "local-model",
+                    messages: [
+                        { role: "system", content: systemContent },
+                        { role: "user", content: userContent }
+                    ],
+                    stream: false
+                };
+            }
+
+            const response = await fetch(apiUrl, {
+                method: 'POST',
+                headers: headers,
+                body: JSON.stringify(payload)
+            });
+
+            if (!response.ok) {
+                const errorBody = await response.text();
+                throw new Error(`API-Fehler: ${response.status} ${response.statusText}. Antwort: ${errorBody}`);
+            }
+
+            const data = await response.json();
+            let text;
+
+            if (provider === 'google') {
+                text = data.candidates?.[0]?.content?.parts?.[0]?.text;
+            } else {
+                text = data.choices?.[0]?.message?.content;
+            }
+
+            if (text) {
+                let htmlContent = text
+                    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                    .replace(/\* (.*?)(?=\n\* |$)/g, '<li>$1</li>')
+                    .replace(/\n/g, '<br>');
+                if (htmlContent.includes('<li>')) {
+                    htmlContent = '<ul>' + htmlContent.replace(/<br><ul>/g, '<ul>').replace(/<br><br>/g, '<br>') + '</ul>';
+                    htmlContent = htmlContent.replace(/<\/li><br><ul>/g, '<ul>').replace(/<\/ul><br>/g, '</ul>');
+                    htmlContent = htmlContent.replace(/<br>\*/g, '<li>');
+                }
+                resultElement.innerHTML = htmlContent;
+            } else {
+                resultElement.textContent = 'Es konnte keine Antwort generiert werden. Bitte überprüfen Sie die API-Antwort in der Konsole.';
+                console.log('API Response:', data);
+            }
+        } catch (error) {
+            console.error(`Fehler bei der API-Anfrage (${provider}):`, error);
+            resultElement.textContent = `Ein Fehler ist aufgetreten: ${error.message}`;
+        } finally {
+            loadingElement.classList.add('hidden');
+        }
+    }
+
+    const providerRadios = document.querySelectorAll('input[name="ai-provider"]');
+    const googleConfig = document.getElementById('google-config');
+    const localConfig = document.getElementById('local-config');
+
+    providerRadios.forEach(radio => {
+        radio.addEventListener('change', (event) => {
+            if (event.target.value === 'google') {
+                googleConfig.classList.remove('hidden');
+                localConfig.classList.add('hidden');
+            } else {
+                googleConfig.classList.add('hidden');
+                localConfig.classList.remove('hidden');
+            }
+        });
+    });
+
+    const generateKompetenzBtn = document.getElementById('generate-kompetenz-btn');
+    const kompetenzResultEl = document.getElementById('kompetenz-result');
+    const kompetenzLoadingEl = document.getElementById('kompetenz-loading');
+
+    generateKompetenzBtn.addEventListener('click', () => {
+        const topic = document.getElementById('topic-input').value;
+        const skillLevel = document.getElementById('skill-level-input').value;
+
+        if (!topic || !skillLevel) {
+            kompetenzResultEl.textContent = 'Bitte füllen Sie beide Felder aus.';
+            return;
+        }
+
+        const prompt = `Act as an expert instructional designer for IT training in Germany, following the "Berner Modell" by Hans Furrer. Your task is to generate a competence-based training plan element in German.
+        
+Based on the following information, structure your response EXACTLY as follows, using markdown:
+
+**Thema:** [Training Topic]
+**Kontext:** [Target Audience]
+
+**Typische Situation (Performanz):**
+*Describe a realistic, specific, and observable work situation where the learned skill is applied.*
+
+**Kompetenz:**
+*Define the core competence needed to master the situation, starting with "Nach Anweisung..." or "Selbstständig...".*
+
+**Wissen:**
+* List 3-4 necessary theoretical knowledge points (theoretische Kenntnisse).*
+
+**Fertigkeiten:**
+* List 3-4 necessary practical skills (praktische, geübte Verfahren).*
+
+**Fähigkeiten:**
+* List 2-3 necessary soft skills or attitudes (verinnerlichte Haltungen).*
+
+---
+Training Topic: "${topic}"
+Target Audience and Context: "${skillLevel}"`;
+        
+        callAI(prompt, kompetenzResultEl, kompetenzLoadingEl);
+    });
+
+    const generateMethodenBtn = document.getElementById('generate-methoden-btn');
+    const methodenResultEl = document.getElementById('methoden-result');
+    const methodenLoadingEl = document.getElementById('methoden-loading');
+
+    generateMethodenBtn.addEventListener('click', () => {
+        const topic = document.getElementById('method-topic-input').value;
+        const duration = document.getElementById('method-duration-input').value;
+
+        if (!topic || !duration ) {
+            methodenResultEl.textContent = 'Bitte füllen Sie alle Felder aus.';
+            return;
+        }
+
+        const prompt = `Act as an expert IT trainer in Germany applying the "Berner Modell". Your task is to recommend teaching methods that create a "Driftzone". For a training session with the following parameters, suggest a suitable and varied mix of teaching methods (e.g., Generatives Bild als Einstieg, Live-Demo, Angeleitete Übung) and social forms (e.g., Einzelarbeit, Partnerarbeit, Plenum). Provide a brief justification for each suggestion. Format the output as a markdown bulleted list, with sub-bullets for the justification.
+
+Training Topic: "${topic}"
+Training Duration and Group Size: "${duration}"`;
+
+        callAI(prompt, methodenResultEl, methodenLoadingEl);
+    });
+
+});
+</script>
+</body>
+</html>
+
