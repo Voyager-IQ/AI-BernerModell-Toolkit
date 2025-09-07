@@ -3,6 +3,15 @@
 Ein leichtgewichtiges, **reines HTML/Tailwind/Chart.js**-Tool zur Trainingsplanung nach dem **Berner Modell** (Hans Furrer) – speziell für IT-Trainer:innen in der Erwachsenenbildung.  
 Theorie ➜ Visualisierung ➜ **KI-gestützter Assistent** (wahlweise **Google Gemini** oder **lokaler LLM** via **LM Studio / Ollama**).
 
+--
+
+[![Code License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![Content License: CC BY 4.0](https://img.shields.io/badge/Content-CC%20BY%204.0-blue.svg)](https://creativecommons.org/licenses/by/4.0/)
+![Status: Active](https://img.shields.io/badge/Status-Active-success.svg)
+[![Issues](https://img.shields.io/github/issues/fakaiser/AI-BernerModell-Toolkit.svg)](https://github.com/fakaiser/AI-BernerModell-Toolkit/issues)
+[![Pull Requests](https://img.shields.io/github/issues-pr/fakaiser/AI-BernerModell-Toolkit.svg)](https://github.com/fakaiser/AI-BernerModell-Toolkit/pulls)
+[![Security](https://img.shields.io/badge/Security-Policy-blue)](SECURITY.md)
+
 ---
 
 ## 🚀 Features
