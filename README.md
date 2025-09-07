@@ -1,71 +1,92 @@
 # 📘 Interaktives Berner Modell für IT-Trainer
 
-Ein visuell ansprechendes, interaktives Dashboard zur Trainingsplanung nach dem **Berner Modell** von Hans Furrer – speziell für IT-Trainer:innen in der Erwachsenenbildung.
-
-💡 Enthält eine Kombination aus Theorie, Visualisierung und einem KI-gestützten Planungsassistenten  
-(wahlweise Google Gemini oder lokaler LLM via LM Studio / Ollama)
+Ein leichtgewichtiges, **reines HTML/Tailwind/Chart.js**-Tool zur Trainingsplanung nach dem **Berner Modell** (Hans Furrer) – speziell für IT-Trainer:innen in der Erwachsenenbildung.  
+Theorie ➜ Visualisierung ➜ **KI-gestützter Assistent** (wahlweise **Google Gemini** oder **lokaler LLM** via **LM Studio / Ollama**).
 
 ---
 
-## 🚀 Funktionen
-
-- **Modulare Visualisierung** der 6 zentralen Faktoren des Berner Modells (Analyse & Planung)
-- **Klickbare Content-Karten** mit direkt einblendbaren Leitfragen und Praxistipps
-- **Key-Konzept-Karten** zu *Morphemen*, *Driftzone*, *Kompetenzorientierung*
-- **KI-gestützter Trainingsplan-Assistent**
-  - *Kompetenzgenerator* (Performanz → Kompetenz → Ressourcen)
-  - *Methoden-Empfehlung* (passend zur Gruppengröße und Dauer)
-- **Radar-Diagramm** zur Darstellung der Interdependenz zwischen den Faktoren
+## 🚀 Features
+- **Modulare Visualisierung** der 6 Faktoren (Analyse & Planung)
+- **Klickkarten** mit Leitfragen & Praxistipps
+- **Key-Concept-Karten**: *Morpheme*, *Driftzone*, *Kompetenzorientierung*
+- **KI-Assistent**
+  - *Kompetenz-Generator* (Performanz → Kompetenz → Ressourcen)
+  - *Methoden-Empfehlungen* (angepasst an Dauer/Gruppengröße)
+- **Radar-Chart** zur **Interdependenz**
 - **Checkliste** zur strukturierten Trainingsplanung
 
 ---
 
-## ⚙️ Setup & Nutzung
+## ⚡ Quickstart
+1. Repo klonen oder ZIP entpacken.  
+2. `index.html` im Browser öffnen – läuft sofort.  
+3. (Optional) KI nutzen:
+   - **Google**: API-Key in der App eingeben *(nur zu Testzwecken; siehe Sicherheit)*.  
+   - **Lokal (LM Studio / Ollama)**: OpenAI-kompatible URL eintragen, z. B.  
+     `http://localhost:1234/v1/chat/completions`.
 
-### 🔌 KI-Anbieter wählen
-- **Google AI Studio (Gemini)**
-  - Trage deinen API-Key ein (Gemini 1.5 Pro oder 2.5 Flash)
-- **LM Studio / Ollama (lokaler LLM)**
-  - Trage deine lokale OpenAI-kompatible URL ein  
-    z. B. `http://localhost:1234/v1/chat/completions`
-
----
-
-## 🛠️ Technologien
-
-| Technologie | Beschreibung |
-|-------------|--------------|
-| 🧩 **HTML5 & TailwindCSS** | Für UI & Layout |
-| 📊 **Chart.js** | Radar-Diagramm für die Interdependenz |
-| 🧠 **Google Gemini / LM Studio** | Für die KI-basierten Trainingsvorschläge |
-| 🧠 **Ollama** | Alternativer lokaler KI-Anbieter |
+> 💡 Das Tool funktioniert **offline** ohne KI. KI-Funktionen werden erst nach **Opt-in** aktiviert.
 
 ---
 
-## 🧪 Beispiele (Screenshots)
-
-> *(Hier kannst du Screenshots oder GIFs ergänzen, die zeigen: Auswahl, KI-Ausgabe, Visualisierung etc.)*
+## 🔌 KI-Anbieter
+- **Google AI Studio (Gemini)**  
+  - Modelle wie *1.5 Pro* oder *2.5 Flash*.  
+  - ⚠️ Client-seitige Schlüssel sind **öffentlich einsehbar** → **nicht** für produktiven Einsatz.
+- **LM Studio / Ollama (lokal)**  
+  - OpenAI-kompatible Schnittstelle; Daten bleiben in deinem Netzwerk.  
+  - Volle Kontrolle & keine externen Abflüsse.
 
 ---
 
-## 📋 To-Do (Ideen für V2)
+## 🔒 Sicherheit & Datenschutz
+- **Keine Tracker, keine Cookies** standardmäßig.  
+- **Client-seitige API-Keys gelten als öffentlich.** Für produktive Nutzung bitte einen **Proxy** einsetzen, der den Key serverseitig injiziert und nur erlaubte Endpunkte durchlässt.  
+- Empfohlene Header beim Hosting: CSP, Referrer-Policy, X-Frame-Options. (Beispiel siehe `_headers` im Repo.)  
 
-- Export als PDF / Markdown
-- Merken & Laden von Trainingsprofilen
-- Mermaid- oder SVG-Diagramm-Integration
-- Backend-Verknüpfung (z. B. Moodle, SCORM, CSV-Export)
+Details siehe [SECURITY.md](SECURITY.md).
+
+---
+
+## 🧱 Tech-Stack
+| Technologie | Zweck |
+| --- | --- |
+| **HTML5 + TailwindCSS** | UI/Layouts |
+| **Chart.js** | Radar-Diagramm |
+| **Gemini / LM Studio / Ollama** | Optionale KI-Vorschläge |
+
+---
+
+## 📷 Screenshots
+> *(Hier Screenshots oder GIFs ergänzen, z. B. Karten-UI, Radar-Chart, KI-Ausgabe.)*
+
+---
+
+## 🗺️ Roadmap (Ideen für V2)
+- Export nach **PDF/Markdown**  
+- **Profile speichern/laden**  
+- Proxy-Beispiel (Cloudflare Worker / FastAPI)  
+- Backend-Hooks (z. B. Moodle/SCORM/CSV)  
+
+---
+
+## 🤝 Mitmachen
+Pull Requests & Issues willkommen!  
+Bitte:
+- keine Secrets/Keys einchecken  
+- kleine, fokussierte PRs  
+- klare Commit-Messages  
+
+Siehe [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ---
 
 ## 👤 Autor
-
 **Fabian Kaiser / VoyagerIQ**  
-🌐 fkaiser@voyageriq.de
-🔗 [https://linkedin.com/](https://www.linkedin.com/in/fkaiser95/?lipi=urn%3Ali%3Apage%3Ad_flagship3_feed%3BiDDipmL7RY2fQTNhNXyBFA%3D%3D)
+🌐 [voyageriq.tech](https://voyageriq.tech)  
+🔗 [linktr.ee/fakaiser](https://linktr.ee/fakaiser)
 
 ---
-
-## 🪪 Lizenz
 
 ## 🪪 Lizenz
 
@@ -73,5 +94,5 @@ Ein visuell ansprechendes, interaktives Dashboard zur Trainingsplanung nach dem 
 [![License: CC BY 4.0](https://img.shields.io/badge/Content-CC%20BY%204.0-blue.svg)](https://creativecommons.org/licenses/by/4.0/)
 
 - **Code** steht unter [MIT License](LICENSE).  
-- **Texte & Inhalte** stehen unter [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). Attribution bitte an *Fabian Kaiser / VoyagerIQ*.  
+- **Texte & Inhalte** stehen unter [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). Attribution an *Fabian Kaiser / VoyagerIQ*.  
 
