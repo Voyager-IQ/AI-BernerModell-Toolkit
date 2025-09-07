@@ -9,6 +9,15 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <!-- Sicherheit (CSP) -->
+    <meta http-equiv="Content-Security-Policy"
+          content="default-src 'self'; img-src 'self' data: https:;
+                   style-src 'self' 'unsafe-inline' https:;
+                   script-src 'self' https:;
+                   connect-src 'self' https: http://localhost:*;
+                   font-src 'self' data: https:;">
+
     <!-- Chosen Palette: Calm Harmony (Warm neutrals with muted teal/orange accents) -->
     <!-- Application Structure Plan: A task-oriented dashboard centered on the Berner Modell. The structure includes an AI provider selection (Google, LM Studio, Ollama) to make the tool more flexible. It retains the competence-based approach, replacing 'Lernziele' with 'Kompetenzen'. A section introduces key concepts from the source book (Morpheme, Driftzone). The AI assistant generates competence breakdowns (Performanz, Kompetenz, Ressourcen), directly applying the book's methodology with the user's chosen AI backend. This structure guides the user from configuration and theory to practical AI-assisted planning. -->
     <!-- Visualization & Content Choices: 1. Main Model Structure: Report Info -> The 6 factors of the Berner Modell. Goal -> Organize/Navigate. Viz -> Interactive HTML/CSS cards. Interaction -> Click to reveal details. Justification -> Visually represents the model's structure. Method -> HTML/Tailwind. 2. Key Concepts Section: Report Info -> Concepts like Morpheme, Driftzone. Goal -> Explain/Inform. Viz -> Interactive cards. Interaction -> Click to show definitions. Justification -> Deepens understanding. Method -> HTML/Tailwind. 3. AI Assistant: Report Info -> Competence analysis examples. Goal -> Apply principles. Viz -> Input forms and structured text output. Interaction -> User selects AI provider, inputs parameters for a full competence breakdown. Justification -> Turns theory into a powerful, practical planning tool. Method -> Gemini API or local LLM via fetch. 4. Interdependence Chart & Checklist: Report Info -> Interdependence principle and summary. Goal -> Explain/Summarize. Viz -> Radar Chart & HTML Table. Justification -> Visual summary and reference. Library/Method -> Chart.js, HTML/Tailwind. -->
