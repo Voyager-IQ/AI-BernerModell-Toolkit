@@ -1,4 +1,4 @@
-# 📘 Interaktives Berner Modell für IT-Trainer
+# 📘 AI-BernerModell-Toolkit
 
 Ein leichtgewichtiges, **reines HTML/Tailwind/Chart.js**-Tool zur Trainingsplanung nach dem **Berner Modell** (Hans Furrer) – speziell für IT-Trainer:innen in der Erwachsenenbildung.  
 Theorie ➜ Visualisierung ➜ **KI-gestützter Assistent** (wahlweise **Google Gemini** oder **lokaler LLM** via **LM Studio / Ollama**).
@@ -98,8 +98,3 @@ Siehe [CONTRIBUTING.md](CONTRIBUTING.md).
 - **Texte & Inhalte** stehen unter [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). Attribution an *Fabian Kaiser / VoyagerIQ*.  
 
 📌 Für Security-Meldungen: [SECURITY.md](SECURITY.md) (📧 security@voyageriq.de)
-
-
-- **Code** steht unter [MIT License](LICENSE).  
-- **Texte & Inhalte** stehen unter [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). Attribution an *Fabian Kaiser / VoyagerIQ*.  
-
