@@ -1,4 +1,4 @@
-# \# 🧠 Interaktives Berner Modell für IT-Trainer
+# 🧠 Interaktives Berner Modell für IT-Trainer
 
 # 
 
