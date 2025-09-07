@@ -83,8 +83,8 @@ Siehe [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## 👤 Autor
 **Fabian Kaiser / VoyagerIQ**  
-🌐 [voyageriq.tech](https://voyageriq.tech)  
-🔗 [linktr.ee/fakaiser](https://linktr.ee/fakaiser)
+🌐 fkaiser@voyageriq.de
+🔗 [https://linkedin.com/](https://www.linkedin.com/in/fkaiser95)
 
 ---
 
